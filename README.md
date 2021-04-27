@@ -21,3 +21,5 @@ O React Hook Form tem uma abordagem diferente de outras bibliotecas de formulár
 Existem algumas formas de fazer validações dos dados, e uma das forma é utilizando o __yup__, que vai nos permitir criar um __schema__ de validações para garantir que os dados estejam corretos
 
 > Para instalar _yup:__  **npm i -S yup**
+
+### Controller
