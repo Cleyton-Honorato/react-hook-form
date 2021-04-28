@@ -1,11 +1,27 @@
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useController } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, message, Button } from "antd";
 import * as yup from "yup";
 
 import "./App.css";
 import "antd/dist/antd.css";
+
+function TextField({ name, control, onChange }) {
+  const {
+    field: {ref, ...inputProps},
+    fieldState: { invalid, isTouched, isDirty },
+    formState: { touchedFields, dirtyFields },
+  } = useController({
+    name,
+    control,
+    defaultValue: "",
+  });
+
+  return (
+    <Input {...inputProps} />
+  );
+}
 
 function App() {
   const schema = yup.object().shape({
@@ -16,15 +32,12 @@ function App() {
     password: yup
       .string()
       .required(() => message.error("A senha não pode ser vazia"))
-      .min(6, () => message.warning("A senha deve conter pelo menos 6 dígitos")),
+      .min(6, () =>
+        message.warning("A senha deve conter pelo menos 6 dígitos")
+      ),
   });
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-  } = useForm({
+  const { register, handleSubmit, control, setValue } = useForm({
     resolver: yupResolver(schema),
   });
 
@@ -39,7 +52,9 @@ function App() {
     <div className="App">
       <div className="form">
         <label className="label">Email</label>
-        <Controller
+
+        <TextField name="email" control={control} onChange={value => setValue("email", value)} />
+        {/* <Controller
           control={control}
           name="email"
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -48,27 +63,24 @@ function App() {
               onChange={(el) => setValue("email", el.target.value)}
             />
           )}
-        />
+        /> */}
 
         <label className="label">Senha</label>
         <Controller
           control={control}
           name="password"
-          render={({ field: { onChange, onBlur, value, ref } }) => (
+          render={({ field: { value } }) => (
             <Input
               placeholder="senha"
               onChange={(el) => setValue("password", el.target.value)}
+              value={value}
             />
           )}
         />
 
-        <Button
-          className="submit"
-          onChange={() => handleSubmit(onSubmit)}
-        >
+        <Button className="submit" onChange={() => handleSubmit(onSubmit)}>
           enviar
         </Button>
-        
       </div>
     </div>
   );
