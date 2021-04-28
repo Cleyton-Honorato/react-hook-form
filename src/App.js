@@ -1,27 +1,11 @@
 import React, { useEffect } from "react";
-import { useForm, Controller, useController } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, message, Button } from "antd";
 import * as yup from "yup";
 
 import "./App.css";
 import "antd/dist/antd.css";
-
-function TextField({ name, control, onChange }) {
-  const {
-    field: {ref, ...inputProps},
-    fieldState: { invalid, isTouched, isDirty },
-    formState: { touchedFields, dirtyFields },
-  } = useController({
-    name,
-    control,
-    defaultValue: "",
-  });
-
-  return (
-    <Input {...inputProps} />
-  );
-}
 
 function App() {
   const schema = yup.object().shape({
@@ -52,18 +36,17 @@ function App() {
     <div className="App">
       <div className="form">
         <label className="label">Email</label>
-
-        <TextField name="email" control={control} onChange={value => setValue("email", value)} />
-        {/* <Controller
+        <Controller
           control={control}
           name="email"
-          render={({ field: { onChange, onBlur, value, ref } }) => (
+          render={({ field: { value } }) => (
             <Input
-              placeholder="email"
+              placeholder="senha"
               onChange={(el) => setValue("email", el.target.value)}
+              value={value}
             />
           )}
-        /> */}
+        />
 
         <label className="label">Senha</label>
         <Controller
@@ -71,6 +54,7 @@ function App() {
           name="password"
           render={({ field: { value } }) => (
             <Input
+              type="password"
               placeholder="senha"
               onChange={(el) => setValue("password", el.target.value)}
               value={value}
@@ -78,7 +62,7 @@ function App() {
           )}
         />
 
-        <Button className="submit" onChange={() => handleSubmit(onSubmit)}>
+        <Button className="submit" onClick={handleSubmit(onSubmit)}>
           enviar
         </Button>
       </div>
